@@ -1,4 +1,7 @@
-
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.Statement" %>
+<%@ page import="java.sql.ResultSet" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +23,7 @@
     <link href="../css/dashboard.css" rel="stylesheet">
     <script type="text/javascript">
         function logout(){
-            if(!confirm("Do you really want to quit？")){
+            if(!confirm("Do you really want to quit?")){
                 window["event"].returnValue = false;
             }
         }
@@ -28,7 +31,27 @@
 </head>
 
 <body>
+<%
 
+    String driverName = "com.mysql.jdbc.Driver";
+
+    String userName = "chenghao";
+
+    String userPasswd = "chenghao";
+
+    String dbName = "demo";
+
+    String tableName = "user";
+
+    String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
+            + userName + "&password=" + userPasswd;
+
+    Class.forName("com.mysql.jdbc.Driver").newInstance();
+    Connection connection = DriverManager.getConnection(url);
+    Statement statement = connection.createStatement();
+    String sql = "SELECT * FROM " + tableName;
+    ResultSet rs = statement.executeQuery(sql);
+%>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -37,7 +60,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav justify-content-end">
                 <li class="nav-item active">
-                    <a class="navbar-right" href="student_information.jsp">The user who is logging in is：${sessionScope.user.username}(student)</a>
+                    <a class="navbar-right" href="student_profile.jsp">The user who is logging in is：${sessionScope.user.username}(student)</a>
                 </li>
                 <li class="nav-item active">
                     <a class="navbar-right" href="${pageContext.request.contextPath}/FYP1_war_exploded/LoginOutServlet" onclick="return logout()">logout</a>
@@ -82,45 +105,37 @@
                         <th>operation</th>
 
                     </tr>
+                    <%
+                        while (rs.next()) {
+                    %>
+                    <tr>
+                        <th> <%
+                            out.print(rs.getString(1));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(2));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(3));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(4));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(5));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(6));
+                        %>  </th>
 
-                    <tr>
-                        <th>chenghao</th>
-                        <th>xch20100118</th>
-                        <th>Waterford</th>
-                        <th>3530920232</th>
-                        <th>Mary</th>
-                        <th>true</th>
-                    </tr>
-                    <tr>
-                        <th>Isarwi</th>
-                        <th>qsz123456</th>
-                        <th>Nanjing</th>
-                        <th>180203292</th>
-                        <th>Mary</th>
-                        <th>true</th>
-                    </tr>
-                    <tr>
-                        <th>Jack</th>
-                        <th>jack12121</th>
-                        <th>Dublin</th>
-                        <th>3532027322</th>
-                        <th>North</th>
-                        <th>false</th>
-                    </tr>
-                    <tr>
-                        <th>Mike</th>
-                        <th>mike001122</th>
-                        <th>London</th>
-                        <th>3532124643</th>
-                        <th>North</th>
-                        <th>true</th>
-                    </tr>
 
                     </thead>
-
+                    <%
+                        }
+                    %>
                 </table>
             </div>
-            <form class="form-horizontal" role="form" action="${pageContext.request.contextPath}/AdminSearchServlet" method="post">
+            <form class="form-horizontal" role="form" action="${pageContext.request.contextPath}/StudentSearchServlet" method="post">
                 <input type="hidden" name="per" value="service">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">username</label>

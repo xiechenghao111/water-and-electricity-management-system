@@ -33,11 +33,11 @@ public class AddAdminServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         JDBCUtil db = new JDBCUtil();
-        // 创建一个用户保存下将密码和用户名保存
+
         Addadmin addadmin = new Addadmin(username,password,address,telephone);
         DAO dao = new DAO();
         try {
-            //数据库连接
+
             Connection conn = db.getConn();
 
             if(dao.addAdmin(conn, addadmin)) {

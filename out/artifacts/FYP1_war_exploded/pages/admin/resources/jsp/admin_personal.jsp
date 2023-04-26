@@ -26,7 +26,7 @@
 
     <script type="text/javascript">
         function logout(){
-            if(!confirm("真的要退出吗？")){
+            if(!confirm("Do you really want to quit?")){
                 window["event"].returnValue = false;
             }
         }
@@ -36,17 +36,17 @@
 <body>
 
 <%
-    //驱动程序名
+
     String driverName = "com.mysql.jdbc.Driver";
-    //数据库用户名
+
     String userName = "chenghao";
-    //密码
+
     String userPasswd = "chenghao";
-    //数据库名
+
     String dbName = "demo";
-    //表名
+
     String tableName = "administrator";
-    //联结字符串
+
     String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
             + userName + "&password=" + userPasswd;
 
@@ -65,10 +65,10 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav justify-content-end">
                 <li class="nav-item active">
-                    <a class="navbar-right" href="admin_information.jsp">The user who is logging in is：${sessionScope.user.username}(admin)</a>
+                    <a class="navbar-right" href="admin_profile.jsp">The user who is logging in is：${sessionScope.user.username}(admin)</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="navbar-right" href="${pageContext.request.contextPath}/LoginOutServlet" onclick="return logout()">logout</a>
+                    <a class="navbar-right" href="${pageContext.request.contextPath}/FYP1_war_exploded/LoginOutServlet" onclick="return logout()">logout</a>
                 </li>
             </ul>
         </div>
@@ -98,13 +98,34 @@
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-            <h2 class="sub-header">administrator information &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-                <a href="admin_addadmin.jsp" >add the administrator</a>
-            </h2>
+            <h3 style="text-align: center">user information</h3>
+
+            <div style="float: left;">
+
+                <form class="form-inline" action="/FYP1_war_exploded/AdminSearchServlet" method="post">
+                    <div class="form-group">
+                        <label for="exampleInputName2">username</label>
+                        <input type="text" class="form-control" id="exampleInputName2" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputName3">password</label>
+                        <input type="text" class="form-control" id="exampleInputName3" name="password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInput2">telephone</label>
+                        <input type="text" class="form-control" id="exampleInput2" name="telephone" >
+                    </div>
+                    <button type="submit" class="btn btn-default">query</button>
+                </form>
+            </div>
+            <div style="float: right; margin: 5px;">
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_adduser.jsp">add user</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_deleteuser.jsp">delete user</a>
+            </div>
 
 
-            <div class="table-responsive">
-                <table class="table table-striped" >
+            <table border="1" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>username</th>
@@ -143,39 +164,7 @@
 
 
             </div>
-            <form class="form-horizontal" role="form" action="${pageContext.request.contextPath}/FYP1_war_exploded/AdminSearchServlet" method="post">
-                <input type="hidden" name="per" value="service">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">username</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input username" name="studentid">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">password</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input password" name="studentname">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">address</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input address" name="major">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">telephone</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input telephone" name="department">
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">query</button>
-                    </div>
-                </div>
-            </form>
             <div style="position: fixed; bottom: 0; right: 0;">
                 <img src="../images/SETU_LOGO.png" alt="SETU Logo">
             </div>

@@ -24,6 +24,8 @@ public class DeleteUserServlet extends HttpServlet {
         String password = request.getParameter("password").trim();
         String address = request.getParameter("address").trim();
         String telephone = request.getParameter("telephone").trim();
+        String admin_name = request.getParameter("admin_name").trim();
+        String operation = request.getParameter("operation").trim();
         byte[] bytes = username.getBytes("ISO-8859-1");
         username = new String(bytes,"utf-8");
 
@@ -31,11 +33,11 @@ public class DeleteUserServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         JDBCUtil db = new JDBCUtil();
-        // 创建一个用户保存下将密码和用户名保存
-        Deleteuser user = new Deleteuser(username,password,address,telephone);
+
+        Deleteuser user = new Deleteuser(username,password,address,telephone, admin_name, operation);
         DAO dao = new DAO();
         try {
-            //数据库连接
+
             Connection conn = db.getConn();
 
             if(dao.deleteUser(conn, user)) {

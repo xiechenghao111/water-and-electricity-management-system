@@ -1,3 +1,7 @@
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.Statement" %>
+<%@ page import="java.sql.ResultSet" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +22,7 @@
     <link href="../css/dashboard.css" rel="stylesheet">
     <script type="text/javascript">
         function logout(){
-            if(!confirm("真的要退出吗？")){
+            if(!confirm("Do you really want to quit?")){
                 window["event"].returnValue = false;
             }
         }
@@ -26,7 +30,21 @@
 </head>
 
 <body>
+<%
+    String driverName = "com.mysql.jdbc.Driver";
+    String userName = "chenghao";
+    String userPasswd = "chenghao";
+    String dbName = "demo";
+    String tableName = "price";
+    String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
+            + userName + "&password=" + userPasswd;
 
+    Class.forName("com.mysql.jdbc.Driver").newInstance();
+    Connection connection = DriverManager.getConnection(url);
+    Statement statement = connection.createStatement();
+    String sql = "SELECT * FROM " + tableName;
+    ResultSet rs = statement.executeQuery(sql);
+%>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -35,10 +53,10 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav justify-content-end">
                 <li class="nav-item active">
-                    <a class="navbar-right" href="student_information.jsp">The user who is logging in is：${sessionScope.user.username}(student)</a>
+                    <a class="navbar-right" href="student_profile.jsp">The user who is logging in is：${sessionScope.user.username}(student)</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="navbar-right" href="${pageContext.request.contextPath}/LoginOutServlet" onclick="return logout()">log out</a>
+                    <a class="navbar-right" href="${pageContext.request.contextPath}//FYP1_war_exploded/LoginOutServlet" onclick="return logout()">log out</a>
                 </li>
             </ul>
         </div>
@@ -76,27 +94,44 @@
                         <th>float</th>
 
                     </tr>
+                    <%
+                        while (rs.next()) {
+                    %>
                     <tr>
-                        <th>1</th>
-                        <th>water</th>
-                        <th>2</th>
-                        <th>1.9</th>
-                        <th>higher</th>
-
-                    </tr>
-                    <tr>
-                        <th>2</th>
-                        <th>electricity</th>
-                        <th>1.5</th>
-                        <th>1.7</th>
-                        <th>lower</th>
-
-
-                    </tr>
-
+                        <th> <%
+                            out.print(rs.getString(1));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(2));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(3));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(4));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(5));
+                        %>  </th>
                     </thead>
-
+                    <%
+                        }
+                    %>
                 </table>
+                <form class="form-horizontal" role="form" action="${pageContext.request.contextPath}/AdminSearchServlet" method="post">
+                    <input type="hidden" name="per" value="service">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">username</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" placeholder="input username" name="studentid">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">query</button>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div style="position: fixed; bottom: 0; right: 0;">
                 <img src="../images/SETU_LOGO.png" alt="SETU Logo">

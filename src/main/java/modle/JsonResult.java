@@ -1,8 +1,8 @@
 package modle;
 
 public class JsonResult {
-    private int type; //0为失败， 1为成功
-    private String error;  //错误信息
+    private int type;
+    private String error;
 
     public int getType() {
         return type;

@@ -17,22 +17,22 @@ public class Addadmin {
 
     }
 
-    // 获取用户名
+
     public String getUsername() {
         return username;
     }
 
-    // 设置用户名
+
     public void setUsersname(String username) {
         this.username = username;
     }
 
-    // 获取密码
+
     public String getPassword() {
         return password;
     }
 
-    // 设置密码
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -41,17 +41,17 @@ public class Addadmin {
         return address;
     }
 
-    // 设置用户名
+
     public void setAddress(String address) {
         this.address = address;
     }
 
-    // 获取密码
+
     public String getTelephone() {
         return telephone;
     }
 
-    // 设置密码
+
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }

@@ -1,7 +1,9 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.Statement" %>
 <%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.DriverManager" %><%--
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="JAVABEAN.User" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: 35389
   Date: 2/7/2023
@@ -29,7 +31,7 @@
 
     <script type="text/javascript">
         function logout(){
-            if(!confirm("Do you really want to quit？")){
+            if(!confirm("Do you really want to quit?")){
                 window["event"].returnValue = false;
             }
         }
@@ -38,17 +40,17 @@
 
 <body>
 <%
-    //驱动程序名
+
     String driverName = "com.mysql.jdbc.Driver";
-    //数据库用户名
+
     String userName = "chenghao";
-    //密码
+
     String userPasswd = "chenghao";
-    //数据库名
+
     String dbName = "demo";
-    //表名
+
     String tableName = "user";
-    //联结字符串
+
     String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
             + userName + "&password=" + userPasswd;
 
@@ -67,7 +69,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav justify-content-end">
                 <li class="nav-item active">
-                    <a class="navbar-right" href="admin_information.jsp">The user who is logging in is：${sessionScope.user.username}(admin)</a>
+                    <a class="navbar-right" href="admin_profile.jsp">The user who is logging in is：${sessionScope.user.username}(admin)</a>
                 </li>
                 <li class="nav-item active">
                     <a class="navbar-right" href="${pageContext.request.contextPath}/FYP1_war_exploded/LoginOutServlet" onclick="return logout()">logout</a>
@@ -124,21 +126,26 @@
             <div style="float: right; margin: 5px;">
                 <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_adduser.jsp">add user</a>
                 <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_deleteuser.jsp">delete user</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_changeuser.jsp">change user</a>
             </div>
 
 
             <table border="1" class="table table-bordered table-hover">
 
             <thead>
-                    <tr>
-                        <th>username</th>
-                        <th>password</th>
-                        <th>address</th>
-                        <th>telephone</th>
-                        <th>admin_name</th>
-                        <th>operation</th>
-
-                    </tr>
+            <% if (request.getAttribute("userList") != null) { %>
+            <% List<User> userList = (List<User>) request.getAttribute("userList"); %>
+            <% for (User user : userList) { %>
+            <tr>
+                <td><%= user.getUsername() %></td>
+                <td><%= user.getPassword() %></td>
+                <td><%= user.getAddress() %></td>
+                <td><%= user.getTelephone() %></td>
+                <td><%= user.getAdminName() %></td>
+                <td><%= user.getOperation() %></td>
+            </tr>
+            <% } %>
+            <% } %>
                     <%
                         while (rs.next()) {
                     %>
@@ -168,40 +175,35 @@
                         }
                     %>
                 </table>
+            <% if (request.getAttribute("totalPages") != null && request.getAttribute("currentPage") != null) { %>
+            <% int totalPages = (int) request.getAttribute("totalPages"); %>
+            <% int currentPage = (int) request.getAttribute("currentPage"); %>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <% if (currentPage > 1) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="/FYP1_war_exploded/UserPaginationServlet?currentPage=<%= currentPage - 1 %>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <% } %>
+                    <% for (int i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= i == currentPage ? "active" : "" %>">
+                        <a class="page-link" href="/FYP1_war_exploded/UserPaginationServlet?currentPage=<%= i %>"><%= i %></a>
+                    </li>
+                    <% } %>
+                    <% if (currentPage < totalPages) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="/FYP1_war_exploded/UserPaginationServlet?currentPage=<%= currentPage + 1 %>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <% } %>
+                </ul>
+            </nav>
+            <% } %>
             </div>
-            <form class="form-horizontal" role="form" action="/FYP1_war_exploded/AdminSearchServlet" method="post">
-                <input type="hidden" name="per" value="service">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">username</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input username" name="studentid">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">password</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input password" name="studentname">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">address</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input address" name="major">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">telephone</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input telephone" name="department">
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">query</button>
-                    </div>
-                </div>
-            </form>
         <div style="position: fixed; bottom: 0; right: 0;">
             <img src="../images/SETU_LOGO.png" alt="SETU Logo">
         </div>
@@ -217,7 +219,7 @@
 
 <!
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 
 </body>
 </html>

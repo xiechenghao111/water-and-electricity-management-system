@@ -50,11 +50,11 @@ public class HandlePwdServlet extends HttpServlet {
                     response.setHeader("Refresh", "3;url=pages/admin/resources/jsp/change_pwd.jsp");
                 } else {
                     String sql="update user set password=? where username=?";
-                    // 获得执行sql语句的对象
+
                     PreparedStatement pstatement =conn.prepareStatement(sql);
                     pstatement.setString(1, user.getPassword());
                     pstatement.setString(2, user.getUsername());
-                    // 返回受影响修改的行数
+
                     int res = pstatement.executeUpdate();
                     if(res != 0) {
                         out.println("<h1>password has been updated</h1>");

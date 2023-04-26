@@ -3,22 +3,22 @@ package modle;
 
 public class Water {
 
-  private long id;
+  private long ID;
   private String username;
   private String telephone;
-  private java.sql.Date add_Time;
+  private java.sql.Date add_time;
   private long consumption;
-  private long amount_Price;
-  private long unit_Price;
+  private long amount_price;
+  private long unit_price;
   private String stage;
 
 
-  public long getId() {
-    return id;
+  public long getID() {
+    return ID;
   }
 
-  public void setId(long id) {
-    this.id = id;
+  public void setID(long id) {
+    this.ID = ID;
   }
 
 
@@ -41,11 +41,11 @@ public class Water {
 
 
   public java.sql.Date getAdd_Time() {
-    return add_Time;
+    return add_time;
   }
 
-  public void setAdd_Time(java.sql.Date add_Time) {
-    this.add_Time = add_Time;
+  public void setAdd_Time(java.sql.Date add_time) {
+    this.add_time = add_time;
   }
 
 
@@ -59,20 +59,20 @@ public class Water {
 
 
   public long getAmount_Price() {
-    return amount_Price;
+    return amount_price;
   }
 
-  public void setAmount_Price(long amount_Price) {
-    this.amount_Price = amount_Price;
+  public void setAmount_Price(long amount_price) {
+    this.amount_price = amount_price;
   }
 
 
   public long getUnit_Price() {
-    return unit_Price;
+    return unit_price;
   }
 
-  public void setUnit_Price(long unit_Price) {
-    this.unit_Price = unit_Price;
+  public void setUnit_Price(long unit_price) {
+    this.unit_price = unit_price;
   }
 
 

@@ -30,7 +30,7 @@
 
   <script type="text/javascript">
     function logout(){
-      if(!confirm("真的要退出吗？")){
+      if(!confirm("Do you really want to quit？")){
         window["event"].returnValue = false;
       }
     }
@@ -39,17 +39,17 @@
 
 <body>
 <%
-  //驱动程序名
+
   String driverName = "com.mysql.jdbc.Driver";
-  //数据库用户名
+
   String userName = "chenghao";
-  //密码
+
   String userPasswd = "chenghao";
-  //数据库名
+
   String dbName = "demo";
-  //表名
+
   String tableName = "user";
-  //联结字符串
+
   String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
           + userName + "&password=" + userPasswd;
 

@@ -22,9 +22,9 @@ public class AdminSearchServlet extends HttpServlet {
         List<User> users = new ArrayList<User>();
         DBUtils db = new DBUtils();
         try {
-            // 获取数据库连接
+
             Connection conn = db.getConnection();
-            // 构造 SQL 查询语句
+
             String sql = "SELECT * FROM user WHERE 1=1";
             if (username != null && !username.isEmpty()) {
                 sql += " AND username = '" + username + "'";
@@ -35,7 +35,7 @@ public class AdminSearchServlet extends HttpServlet {
             if (telephone != null && !telephone.isEmpty()) {
                 sql += " AND telephone = '" + telephone + "'";
             }
-            // 执行 SQL 查询，并将结果保存到 users 列表中
+
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -45,7 +45,7 @@ public class AdminSearchServlet extends HttpServlet {
                 user.setTelephone(rs.getString("telephone"));
                 users.add(user);
             }
-            // 关闭连接
+
             rs.close();
             ps.close();
             conn.close();
@@ -66,12 +66,13 @@ public class AdminSearchServlet extends HttpServlet {
         String password = request.getParameter("password");
         String telephone = request.getParameter("telephone");
 
-        // 处理搜索逻辑，查询数据库或调用外部API
+
         List<User> users = search(username, password, telephone); // 返回User对象列表
-        // 将搜索结果保存到request中
+
         request.setAttribute("users", users);
-        // 转发到结果页面
+
         response.setHeader("Refresh", "3;url=/FYP1_war_exploded//pages/admin/resources/jsp/admin_search_results.jsp");
+
     }
 
 

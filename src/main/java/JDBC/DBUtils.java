@@ -2,7 +2,7 @@ package JDBC;
 import java.sql.*;
 public class DBUtils {
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver"); // mysql8 驱动改名
+        Class.forName("com.mysql.jdbc.Driver"); // mysql8
         String url = "jdbc:mysql://127.0.0.1:3306/demo?user=chenghao";
         String username = "chenghao";
         String password = "chenghao";

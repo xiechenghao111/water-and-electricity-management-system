@@ -1,4 +1,7 @@
-<%--
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.Statement" %>
+<%@ page import="java.sql.ResultSet" %><%--
   Created by IntelliJ IDEA.
   User: 35389
   Date: 2/7/2023
@@ -25,7 +28,7 @@
     <link href="../css/dashboard.css" rel="stylesheet">
     <script type="text/javascript">
         function logout(){
-            if(!confirm("真的要退出吗？")){
+            if(!confirm("Do you really want to quit?")){
                 window["event"].returnValue = false;
             }
         }
@@ -33,7 +36,27 @@
 </head>
 
 <body>
+<%
 
+    String driverName = "com.mysql.jdbc.Driver";
+
+    String userName = "chenghao";
+
+    String userPasswd = "chenghao";
+
+    String dbName = "demo";
+
+    String tableName = "water";
+
+    String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
+            + userName + "&password=" + userPasswd;
+
+    Class.forName("com.mysql.jdbc.Driver").newInstance();
+    Connection connection = DriverManager.getConnection(url);
+    Statement statement = connection.createStatement();
+    String sql = "SELECT * FROM " + tableName;
+    ResultSet rs = statement.executeQuery(sql);
+%>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -75,94 +98,80 @@
             <li><a href = "admin_maintaintance.jsp">basic data mataintance</a></li>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <tr>
-                <h2 class="sub-header">  <th>electricity bill management </th>
-                    &nbsp &nbsp &nbsp  &nbsp &nbsp &nbsp  <th> <a href="admin_addwater.jsp">export excel</a> </th>
-                    &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp <th> <a href ="admin_addwater.jsp">add information </a></th></h2>
-            </tr>
-            <div class="table-responsive">
-                <table class="table table-striped" >
+            <h3 style="text-align: center">electricity bill information</h3>
+
+            <div style="float: left;">
+
+                <form class="form-inline" action="/FYP1_war_exploded/AdminSearchServlet" method="post">
+                    <div class="form-group">
+                        <label for="exampleInputName2">username</label>
+                        <input type="text" class="form-control" id="exampleInputName2" name="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInput2">telephone</label>
+                        <input type="text" class="form-control" id="exampleInput2" name="telephone" >
+                    </div>
+                    <button type="submit" class="btn btn-default">query</button>
+                </form>
+            </div>
+            <div style="float: right; margin: 5px;">
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/ExportExcelServlet">Export Excel</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_addelectricity.jsp">add information</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_deleteelectricity.jsp">delete information</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_changeelectricity.jsp">change information</a>
+            </div>
+
+
+            <table border="1" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>ID</th>
                         <th>username</th>
                         <th>telephone</th>
-                        <th>add time</th>
+                        <th>add_time</th>
                         <th>consumption(degree)</th>
-                        <th>amount price</th>
-                        <th>unit price</th>
+                        <th>amount_price</th>
+                        <th>unit_price</th>
                         <th>stage</th>
                     </tr>
+                    <%
+                        while (rs.next()) {
+                    %>
                     <tr>
-                        <th>1</th>
-                        <th>chenghao</th>
-                        <th>3530920232</th>
-                        <th>2022-2-6</th>
-                        <th>100</th>
-                        <th>1.5</th>
-                        <th>150</th>
-                        <th>paid</th>
-
-                    </tr>
-                    <tr>
-                        <th>2</th>
-                        <th>Isarwi</th>
-                        <th>180203292</th>
-                        <th>2022-2-10</th>
-                        <th>120</th>
-                        <th>1.5</th>
-                        <th>180</th>
-                        <th>paid</th>
-
-                    </tr>
-                    <tr>
-                        <th>3</th>
-                        <th>Jack</th>
-                        <th>3532027322</th>
-                        <th></th>
-                        <th>100</th>
-                        <th>1.5</th>
-                        <th>150</th>
-                        <th><span style="color:red">unpaid</span></th>
-
-                    </tr>
-                    <tr>
-                        <th>4</th>
-                        <th>Mike</th>
-                        <th>3532124643</th>
-                        <th>2022-2-2</th>
-                        <th>110</th>
-                        <th>1.5</th>
-                        <th>165</th>
-                        <th>paid</th>
-
-                    </tr>
+                        <th> <%
+                            out.print(rs.getString(1));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(2));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(3));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(4));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(5));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(6));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(7));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(8));
+                        %>  </th>
                     </thead>
-
+                <%
+                    }
+                %>
 
                 </table>
 
             </div>
-            <form class="form-horizontal" role="form" action="${pageContext.request.contextPath}/AdminSearchServlet" method="post">
-                <input type="hidden" name="per" value="service">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">username</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input username" name="studentid">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">telephone</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input telephone" name="studentname">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">query</button>
-                    </div>
-                </div>
-            </form>
+
             <div style="position: fixed; bottom: 0; right: 0;">
                 <img src="../images/SETU_LOGO.png" alt="SETU Logo">
             </div>

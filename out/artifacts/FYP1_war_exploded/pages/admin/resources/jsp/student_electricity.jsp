@@ -1,4 +1,7 @@
-<%--
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.Statement" %>
+<%@ page import="java.sql.ResultSet" %><%--
   Created by IntelliJ IDEA.
   User: 35389
   Date: 2/2/2023
@@ -25,7 +28,7 @@
     <link href="../css/dashboard.css" rel="stylesheet">
     <script type="text/javascript">
         function logout(){
-            if(!confirm("真的要退出吗？")){
+            if(!confirm("Do you really want to quit?")){
                 window["event"].returnValue = false;
             }
         }
@@ -33,7 +36,27 @@
 </head>
 
 <body>
+<%
 
+    String driverName = "com.mysql.jdbc.Driver";
+
+    String userName = "chenghao";
+
+    String userPasswd = "chenghao";
+
+    String dbName = "demo";
+
+    String tableName = "electricity";
+
+    String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
+            + userName + "&password=" + userPasswd;
+
+    Class.forName("com.mysql.jdbc.Driver").newInstance();
+    Connection connection = DriverManager.getConnection(url);
+    Statement statement = connection.createStatement();
+    String sql = "SELECT * FROM " + tableName;
+    ResultSet rs = statement.executeQuery(sql);
+%>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -42,10 +65,10 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav justify-content-end">
                 <li class="nav-item active">
-                    <a class="navbar-right" href="student_information.jsp">The user who is logging in is：${sessionScope.user.username}(student)</a>
+                    <a class="navbar-right" href="student_profile.jsp">The user who is logging in is：${sessionScope.user.username}(student)</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="navbar-right" href="${pageContext.request.contextPath}/LoginOutServlet" onclick="return logout()">log out</a>
+                    <a class="navbar-right" href="${pageContext.request.contextPath}/FYP1_war_exploded/LoginOutServlet" onclick="return logout()">log out</a>
                 </li>
             </ul>
         </div>
@@ -85,53 +108,72 @@
                         <th>unit price</th>
                         <th>stage</th>
                     </tr>
+                    <%
+                        while (rs.next()) {
+                    %>
                     <tr>
-                        <th>1</th>
-                        <th>chenghao</th>
-                        <th>3530920232</th>
-                        <th>2022-2-6</th>
-                        <th>100</th>
-                        <th>1.5</th>
-                        <th>150</th>
-                        <th>paid</th>
-
-                    </tr>
-                    <tr>
-                        <th>2</th>
-                        <th>Isarwi</th>
-                        <th>180203292</th>
-                        <th>2022-2-10</th>
-                        <th>120</th>
-                        <th>1.5</th>
-                        <th>180</th>
-                        <th>paid</th>
-
-                    </tr>
-                    <tr>
-                        <th>3</th>
-                        <th>Jack</th>
-                        <th>3532027322</th>
-                        <th></th>
-                        <th>100</th>
-                        <th>1.5</th>
-                        <th>150</th>
-                        <th><span style="color:red">unpaid</span></th>
-
-                    </tr>
-                    <tr>
-                        <th>4</th>
-                        <th>Mike</th>
-                        <th>3532124643</th>
-                        <th>2022-2-2</th>
-                        <th>110</th>
-                        <th>1.5</th>
-                        <th>165</th>
-                        <th>paid</th>
-
-                    </tr>
+                        <th> <%
+                            out.print(rs.getString(1));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(2));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(3));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(4));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(5));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(6));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(7));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(8));
+                        %>  </th>
                     </thead>
-
+                    <%
+                        }
+                    %>
                 </table>
+                <form class="form-horizontal" role="form" action="${pageContext.request.contextPath}/AdminSearchServlet" method="post">
+                    <input type="hidden" name="per" value="service">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">username</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" placeholder="input username" name="studentid">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">telephone</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" placeholder="input telephone" name="telephone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">consumption</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" placeholder="input consumption" name="consumption">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">unit price</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" placeholder="input unit price" name="unit price">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">query</button>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div style="position: fixed; bottom: 0; right: 0;">
                 <img src="../images/SETU_LOGO.png" alt="SETU Logo">

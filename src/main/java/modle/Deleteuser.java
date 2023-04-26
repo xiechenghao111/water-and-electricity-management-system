@@ -6,33 +6,39 @@ public class Deleteuser {
     private String address;
     private String telephone;
 
-    // 构造函数
+    private  String admin_name;
+
+    private    String operation;
+
+
     public Deleteuser() {}
 
-    public Deleteuser(String username, String password,String address, String telephone) {
+    public Deleteuser(String username, String password,String address, String telephone, String admin_name, String operation) {
         this.username = username;
         this.password = password;
         this.address = address;
         this.telephone = telephone;
+        this.admin_name = admin_name;
+        this.operation = operation;
 
     }
 
-    // 获取用户名
+
     public String getUsername() {
         return username;
     }
 
-    // 设置用户名
+
     public void setUsersname(String username) {
         this.username = username;
     }
 
-    // 获取密码
+
     public String getPassword() {
         return password;
     }
 
-    // 设置密码
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -41,12 +47,12 @@ public class Deleteuser {
         return address;
     }
 
-    // 设置用户名
+
     public void setAddress(String address) {
         this.address = address;
     }
 
-    // 获取密码
+
     public String getTelephone() {
         return telephone;
     }
@@ -54,6 +60,22 @@ public class Deleteuser {
     // 设置密码
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+    public String getAdmin_name() {
+        return admin_name;
+    }
+
+
+    public void setAdmin_name(String adminName) {
+        this.admin_name = adminName;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
     }
 
 }

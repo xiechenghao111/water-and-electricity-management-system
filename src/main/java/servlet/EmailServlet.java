@@ -22,26 +22,26 @@ public class EmailServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         System.out.println(email);
-        // 获取随机的6位数
-        String num = RandomStringUtils.randomNumeric(6);
-        // 邮件内容
-        String emailMsg = "邮箱验证码为："+ num +"请勿泄漏给他人！";
 
-        // 在服务器端保存邮件验证码
+        String num = RandomStringUtils.randomNumeric(6);
+
+        String emailMsg = "Email verification code is："+ num + "Do not disclose to others!";
+
+
         request.getSession().setAttribute("emailCode", num);
 
         JsonResult jr = new JsonResult();
 
         try {
             MailUtil mail = new MailUtil();
-            // 发送邮件
+
             mail.sendMail(email, emailMsg);
-            jr.setType(1); // 发送成功
+            jr.setType(1);
             response.getWriter().write(JSON.toJSONString(jr));
             return;
         } catch (Exception e) {
             e.printStackTrace();
-            jr.setType(0); // 发送失败
+            jr.setType(0);
             jr.setError("邮件发送失败");
             response.getWriter().write(JSON.toJSONString(jr));
             return;

@@ -1,104 +1,58 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: 35389
-  Date: 3/21/2023
-  Time: 12:11 PM
-  To change this template use File | Settings | File Templates.
---%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- custom css file link  -->
-    <link rel="stylesheet" href="../css/paymentstyle.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    /* Add your custom styles here */
+  </style>
 </head>
 <body>
+<form id="payment-form">
+  <div id="card-element">
+    <!-- Elements will create input elements here -->
+  </div>
+  <button id="submit">Pay</button>
+  <div id="payment-result"></div>
+</form>
 
-<div class="container">
+<script>
+  const stripe = Stripe('<pk_test_51MnmJyI3NJ8AqXYJjXR0vd0UeyiiddPh6m5PZztK8gDEWmK8WqwaBA6KG0b95NirEZrG9wUGmrbMSorSMZl4wd0v000BWj4PKV>');
+  const elements = stripe.elements();
+  const cardElement = elements.create('card');
+  cardElement.mount('#card-element');
 
-    <form action="">
+  const form = document.getElementById('payment-form');
+  const resultContainer = document.getElementById('payment-result');
 
-        <div class="row">
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { paymentIntent, error } = await stripe.createPaymentIntent({
+      amount: 1000, // Replace this with the desired amount in cents
+      currency: 'usd',
+    });
 
-            <div class="col">
+    if (error) {
+      resultContainer.textContent = `Error: ${error.message}`;
+    } else {
+      const result = await stripe.confirmCardPayment(paymentIntent.client_secret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: 'Test User', // Replace this with the actual user's name
+          },
+        },
+      });
 
-                <h3 class="title">billing address</h3>
-
-                <div class="inputBox">
-                    <span>full name :</span>
-                    <input type="text" placeholder="john deo">
-                </div>
-                <div class="inputBox">
-                    <span>email :</span>
-                    <input type="email" placeholder="example@example.com">
-                </div>
-                <div class="inputBox">
-                    <span>address :</span>
-                    <input type="text" placeholder="room - street - locality">
-                </div>
-                <div class="inputBox">
-                    <span>city :</span>
-                    <input type="text" placeholder="mumbai">
-                </div>
-
-                <div class="flex">
-                    <div class="inputBox">
-                        <span>state :</span>
-                        <input type="text" placeholder="india">
-                    </div>
-                    <div class="inputBox">
-                        <span>zip code :</span>
-                        <input type="text" placeholder="123 456">
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="col">
-
-                <h3 class="title">payment</h3>
-
-                <div class="inputBox">
-                    <span>cards accepted :</span>
-                    <img src="../images/card_img.png" alt="">
-                </div>
-                <div class="inputBox">
-                    <span>name on card :</span>
-                    <input type="text" placeholder="mr. john deo">
-                </div>
-                <div class="inputBox">
-                    <span>credit card number :</span>
-                    <input type="number" placeholder="1111-2222-3333-4444">
-                </div>
-                <div class="inputBox">
-                    <span>exp month :</span>
-                    <input type="text" placeholder="january">
-                </div>
-
-                <div class="flex">
-                    <div class="inputBox">
-                        <span>exp year :</span>
-                        <input type="number" placeholder="2022">
-                    </div>
-                    <div class="inputBox">
-                        <span>CVV :</span>
-                        <input type="text" placeholder="1234">
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <input type="submit" value="proceed to checkout" class="submit-btn">
-
-    </form>
-
-</div>
-
+      if (result.error) {
+        resultContainer.textContent = `Error: ${result.error.message}`;
+      } else {
+        resultContainer.textContent = 'Payment successful!';
+      }
+    }
+  });
+</script>
 </body>
 </html>

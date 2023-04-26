@@ -28,7 +28,7 @@
     <link href="../css/dashboard.css" rel="stylesheet">
     <script type="text/javascript">
         function logout(){
-            if(!confirm("真的要退出吗？")){
+            if(!confirm("Do you really want to quit?")){
                 window["event"].returnValue = false;
             }
         }
@@ -37,17 +37,17 @@
 
 <body>
 <%
-    //驱动程序名
+
     String driverName = "com.mysql.jdbc.Driver";
-    //数据库用户名
+
     String userName = "chenghao";
-    //密码
+
     String userPasswd = "chenghao";
-    //数据库名
+
     String dbName = "demo";
-    //表名
+
     String tableName = "price";
-    //联结字符串
+
     String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
             + userName + "&password=" + userPasswd;
 
@@ -65,10 +65,10 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav justify-content-end">
                 <li class="nav-item active">
-                    <a class="navbar-right" href="student_information.jsp">The user who is logging in is：${sessionScope.user.username}(admin)</a>
+                    <a class="navbar-right" href="admin_profile.jsp">The user who is logging in is：${sessionScope.user.username}(admin)</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="navbar-right" href="${pageContext.request.contextPath}/LoginOutServlet" onclick="return logout()">log out</a>
+                    <a class="navbar-right" href="${pageContext.request.contextPath}/FYP1_war_exploded/LoginOutServlet" onclick="return logout()">log out</a>
                 </li>
             </ul>
         </div>
@@ -97,16 +97,33 @@
             <li><a href = "admin_maintaintance.jsp">basic data mataintance</a></li>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h2 class="sub-header">price query</h2>
-            <div class="table-responsive">
-                <table class="table table-striped" >
+            <h3 style="text-align: center">price information</h3>
+
+            <div style="float: left;">
+
+                <form class="form-inline" action="/FYP1_war_exploded/AdminSearchServlet" method="post">
+                    <div class="form-group">
+                        <label for="exampleInputName2">type</label>
+                        <input type="text" class="form-control" id="exampleInputName2" name="username">
+                    </div>
+                    <button type="submit" class="btn btn-default">query</button>
+                </form>
+            </div>
+
+            <div style="float: right; margin: 5px;">
+
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_changeprice.jsp">change price</a>
+
+            </div>
+
+            <table border="1" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>ID</th>
                         <th>type</th>
-                        <th>unit price</th>
-                        <th>last_months price</th>
-                        <th>float</th>
+                        <th>unit_price</th>
+                        <th>last_months_price</th>
+                        <th>fluctuation</th>
 
                     </tr>
                     <%
@@ -136,21 +153,7 @@
                     %>
                 </table>
             </div>
-            <form class="form-horizontal" role="form" action="${pageContext.request.contextPath}/AdminSearchServlet" method="post">
-                <input type="hidden" name="per" value="service">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">type</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input type" name="studentid">
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">query</button>
-                    </div>
-                </div>
-            </form>
             <div style="position: fixed; bottom: 0; right: 0;">
                 <img src="../images/SETU_LOGO.png" alt="SETU Logo">
             </div>

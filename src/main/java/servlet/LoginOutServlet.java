@@ -12,9 +12,9 @@ public class LoginOutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate(); // 使当前会话无效
+            session.invalidate();
         }
-        response.sendRedirect(request.getContextPath() + "/pages/admin/resources/jsp/userlogin.jsp"); // 重定向到登录页面
+        response.sendRedirect(request.getContextPath() + "/pages/admin/resources/jsp/userlogin.jsp");
 
     }
 

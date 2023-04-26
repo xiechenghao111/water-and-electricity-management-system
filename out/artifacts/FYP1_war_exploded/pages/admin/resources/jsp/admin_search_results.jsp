@@ -1,20 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: 35389
-  Date: 3/14/2023
-  Time: 9:23 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.Statement" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.DriverManager" %><%--
-  Created by IntelliJ IDEA.
-  User: 35389
-  Date: 2/7/2023
-  Time: 3:54 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.util.List" %>
+<%@ page import="JAVABEAN.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +7,6 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -36,7 +20,7 @@
 
   <script type="text/javascript">
     function logout(){
-      if(!confirm("Do you really want to quit？")){
+      if(!confirm("Do you really want to quit?")){
         window["event"].returnValue = false;
       }
     }
@@ -44,6 +28,7 @@
 </head>
 
 <body>
+
 
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -86,83 +71,48 @@
       <li><a href = "admin_maintaintance.jsp">basic data mataintance</a></li>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
       <h3 style="text-align: center">user information</h3>
-
-      <div style="float: left;">
-
-        <form class="form-inline" action="/FYP1_war_exploded/AdminSearchServlet" method="post">
-          <div class="form-group">
-            <label for="exampleInputName2">username</label>
-            <input type="text" class="form-control" id="exampleInputName2" name="username">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputName3">password</label>
-            <input type="text" class="form-control" id="exampleInputName3" name="password">
-          </div>
-
-          <div class="form-group">
-            <label for="exampleInput2">telephone</label>
-            <input type="text" class="form-control" id="exampleInput2" name="telephone" >
-          </div>
-          <button type="submit" class="btn btn-default">query</button>
-        </form>
-      </div>
       <div style="float: right; margin: 5px;">
         <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_adduser.jsp">add user</a>
         <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_deleteuser.jsp">delete user</a>
+        <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_changeuser.jsp">change user</a>
       </div>
 
+        <% List<User> users = (List<User>) request.getAttribute("users"); %>
 
-      <table border="1" class="table table-bordered table-hover">
-
-        <thead>
-        <tr>
-          <th>username</th>
-          <th>password</th>
-          <th>address</th>
-          <th>telephone</th>
-          <th>admin_name</th>
-          <th>operation</th>
-
-        </tr>
-
-
-        </thead>
-        <tbody>
-
-        <c:forEach var="user" items="${users}">
+        <table border="1" class="table table-bordered table-hover">
+          <thead>
           <tr>
-            <td>${user.username}</td>
-            <td>${user.password}</td>
-            <td>Waterford</td>
-            <td>3530920232</td>
-            <td>Mary</td>
-            <td>true</td>
+
+            <th>username</th>
+            <th>password</th>
+            <th>name</th>
+            <th>email</th>
+            <th>telephone</th>
+            <th>operation</th>
+          </tr>
+          <tr>
+            <th>Chenghao</th>
+            <th>xch123456</th>
+            <th>Waterford</th>
+            <th>3530920232</th>
+            <th>Mary</th>
+            <th>true</th>
 
           </tr>
-        </c:forEach>
-        </tbody>
-      </table>
+          </thead>
+
+        </table>
+      </div>
+      <div style="position: fixed; bottom: 0; right: 0;">
+        <img src="../images/SETU_LOGO.png" alt="SETU Logo">
+      </div>
     </div>
 
-    <div style="position: fixed; bottom: 0; right: 0;">
-      <img src="../images/SETU_LOGO.png" alt="SETU Logo">
-    </div>
   </div>
 </div>
-</div>
-
-
-
-</div>
-</div>
-</div>
-
-<!
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-
+  <!-- Bootstrap core JavaScript -->
+  <script src="../js/jquery-3.6.0.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
 </body>
 </html>
-

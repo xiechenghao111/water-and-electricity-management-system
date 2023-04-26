@@ -27,12 +27,12 @@ public class ExportExcelServlet extends HttpServlet {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/demo?user=chenghao", "chenghao", "chenghao");
 
-            // 执行SQL查询
+
             String sql = "SELECT * FROM water";
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery();
 
-            // 将查询结果存储在List中
+
             List<Water> dataList = new ArrayList<>();
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -42,7 +42,7 @@ public class ExportExcelServlet extends HttpServlet {
             }
             while (rs.next()) {
                 Water water = new Water();
-                water.setId(rs.getLong("id"));
+                water.setID(rs.getLong("id"));
                 water.setUsername(rs.getString("username"));
                 water.setTelephone(rs.getString("telephone"));
                 water.setAdd_Time(rs.getDate("add_time"));
@@ -53,11 +53,11 @@ public class ExportExcelServlet extends HttpServlet {
                 dataList.add(water);
             }
 
-            // 导出数据到Excel文件
+
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("Water Bill");
 
-            // 创建标题行
+
             Row titleRow = sheet.createRow(0);
             titleRow.createCell(0).setCellValue("ID");
             titleRow.createCell(1).setCellValue("Username");
@@ -68,11 +68,11 @@ public class ExportExcelServlet extends HttpServlet {
             titleRow.createCell(6).setCellValue("Unit Price");
             titleRow.createCell(7).setCellValue("Stage");
 
-            // 创建数据行
+
             int rowNum = 1;
             for (Water water : dataList) {
                 Row dataRow = sheet.createRow(rowNum++);
-                dataRow.createCell(0).setCellValue(water.getId());
+                dataRow.createCell(0).setCellValue(water.getID());
                 dataRow.createCell(1).setCellValue(water.getUsername());
                 dataRow.createCell(2).setCellValue(water.getTelephone());
                 dataRow.createCell(3).setCellValue(water.getAdd_Time().toString());
@@ -82,10 +82,10 @@ public class ExportExcelServlet extends HttpServlet {
                 dataRow.createCell(7).setCellValue(water.getStage());
             }
 
-            // 合并标题行
 
 
-            // 设置样式
+
+
             CellStyle titleStyle = workbook.createCellStyle();
             titleStyle.setAlignment(HorizontalAlignment.CENTER);
             titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -96,7 +96,7 @@ public class ExportExcelServlet extends HttpServlet {
             for (int i = 1; i <= 7; i++) {
                 titleRow.getCell(i).setCellStyle(titleStyle);
             }
-            // 设置列宽
+
             sheet.setColumnWidth(0, 256 * 10);
             sheet.setColumnWidth(1, 256 * 15);
             sheet.setColumnWidth(2, 256 * 15);
@@ -106,7 +106,7 @@ public class ExportExcelServlet extends HttpServlet {
             sheet.setColumnWidth(6, 256 * 15);
             sheet.setColumnWidth(7, 256 * 15);
 
-            // 下载Excel文件
+
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("Water_Bill.xls", "UTF-8"));
             OutputStream out = response.getOutputStream();

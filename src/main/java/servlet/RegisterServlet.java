@@ -22,7 +22,7 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password").trim();
         String again_password = request.getParameter("again_password").trim();
 
-        //解决中文字符乱码
+
         byte[] bytes = username.getBytes("ISO-8859-1");
         username = new String(bytes,"utf-8");
 
@@ -30,12 +30,12 @@ public class RegisterServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         JDBCUtil db = new JDBCUtil();
-        // 创建一个用户保存下将密码和用户名保存
+
         User user = new User(username,password);
         DAO dao = new DAO();
 
         try {
-            //数据库连接
+
             Connection conn = db.getConn();
 
             if(username.length() < 5 || password.length() < 8 || !password.matches(".*\\d.*") || !password.matches(".*[a-zA-Z].*")) {

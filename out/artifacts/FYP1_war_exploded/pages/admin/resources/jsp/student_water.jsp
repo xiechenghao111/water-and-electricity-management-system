@@ -1,4 +1,7 @@
-
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.Statement" %>
+<%@ page import="java.sql.ResultSet" %>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -20,7 +23,7 @@
     <link href="../css/dashboard.css" rel="stylesheet">
     <script type="text/javascript">
         function logout(){
-            if(!confirm("Do you really want to quit？？")){
+            if(!confirm("Do you really want to quit?")){
                 window["event"].returnValue = false;
             }
         }
@@ -28,7 +31,21 @@
 </head>
 
 <body>
+<%
+    String driverName = "com.mysql.jdbc.Driver";
+    String userName = "chenghao";
+    String userPasswd = "chenghao";
+    String dbName = "demo";
+    String tableName = "water";
+    String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
+            + userName + "&password=" + userPasswd;
 
+    Class.forName("com.mysql.jdbc.Driver").newInstance();
+    Connection connection = DriverManager.getConnection(url);
+    Statement statement = connection.createStatement();
+    String sql = "SELECT * FROM " + tableName;
+    ResultSet rs = statement.executeQuery(sql);
+%>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -37,7 +54,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav justify-content-end">
                 <li class="nav-item active">
-                    <a class="navbar-right" href="student_information.jsp">The user who is logging in is：${sessionScope.user.username}(student)</a>
+                    <a class="navbar-right" href="student_profile.jsp">The user who is logging in is：${sessionScope.user.username}(student)</a>
                 </li>
                 <li class="nav-item active">
                     <a class="navbar-right" href="${pageContext.request.contextPath}/FYP1_war_exploded/LoginOutServlet" onclick="return logout()">log out</a>
@@ -68,7 +85,7 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h2 class="sub-header">water bill query</h2>
             <div class="table-responsive">
-                <table class="table table-striped" >
+                <table class="table table-striped">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -80,53 +97,43 @@
                         <th>unit price</th>
                         <th>stage</th>
                     </tr>
-                    <tr>
-                        <th>1</th>
-                        <th>chenghao</th>
-                        <th>3530920232</th>
-                        <th>2022-2-6</th>
-                        <th>125</th>
-                        <th>2</th>
-                        <th>250</th>
-                        <th>paid</th>
-
-                    </tr>
-                    <tr>
-                        <th>2</th>
-                        <th>Isarwi</th>
-                        <th>180203292</th>
-                        <th>2022-2-10</th>
-                        <th>120</th>
-                        <th>2</th>
-                        <th>240</th>
-                        <th>paid</th>
-
-                    </tr>
-                    <tr>
-                        <th>3</th>
-                        <th>Jack</th>
-                        <th>3532027322</th>
-                        <th></th>
-                        <th>127</th>
-                        <th>2</th>
-                        <th>254</th>
-                        <th><span style="color:red">unpaid</span></th>
-
-                    </tr>
-                    <tr>
-                        <th>4</th>
-                        <th>Mike</th>
-                        <th>3532124643</th>
-                        <th>2022-2-2</th>
-                        <th>110</th>
-                        <th>2</th>
-                        <th>220</th>
-                        <th>paid</th>
-
-                    </tr>
                     </thead>
-
+                    <tbody>
+                    <%
+                        while (rs.next()) {
+                    %>
+                    <tr>
+                        <th><% out.print(rs.getString(1)); %></th>
+                        <th><% out.print(rs.getString(2)); %></th>
+                        <th><% out.print(rs.getString(3)); %></th>
+                        <th><% out.print(rs.getString(4)); %></th>
+                        <th><% out.print(rs.getString(5)); %></th>
+                        <th><% out.print(rs.getString(6)); %></th>
+                        <th><% out.print(rs.getString(7)); %></th>
+                        <th>
+                            <%
+                                String recordId = rs.getString(1); // Assuming record ID is the first column in your ResultSet
+                                String stageValue = rs.getString(8); // Assuming stage value is the 8th column in your ResultSet
+                            %>
+                            <%
+                                if ("unpaid".equals(stageValue)) {
+                            %>
+                            <a href="https://buy.stripe.com/test_00gcQ44tA5r0bhC8ww" target="_blank" onclick="payAndNotify('<%= recordId %>', '<%= stageValue %>')">
+                                <%= stageValue %>
+                            </a>
+                            <%
+                                } else {
+                                    out.print(stageValue);
+                                }
+                            %>
+                        </th>
+                    </tr>
+                    <%
+                        }
+                    %>
+                    </tbody>
                 </table>
+
                 <form class="form-horizontal" role="form" action="${pageContext.request.contextPath}/AdminSearchServlet" method="post">
                     <input type="hidden" name="per" value="service">
                     <div class="form-group">
@@ -173,7 +180,23 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script>
+    function payAndNotify(recordId, stageValue) {
+        if (stageValue === 'unpaid') {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Handle the response from the servlet
+                }
+            };
+            xhr.open("POST", "${pageContext.request.contextPath}/UpdateRecordServlet", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("recordId=" + recordId);
+        }
 
+        // Redirect to the Stripe payment page or perform other actions as needed
+    }
+</script>
 </body>
 </html>
 

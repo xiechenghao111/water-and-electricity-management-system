@@ -1,4 +1,7 @@
-<%--
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.Statement" %>
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.ResultSet" %><%--
   Created by IntelliJ IDEA.
   User: 35389
   Date: 2/7/2023
@@ -25,7 +28,7 @@
     <link href="../css/dashboard.css" rel="stylesheet">
     <script type="text/javascript">
         function logout(){
-            if(!confirm("Do you really want to quit？")){
+            if(!confirm("Do you really want to quit?")){
                 window["event"].returnValue = false;
             }
         }
@@ -33,7 +36,27 @@
 </head>
 
 <body>
+<%
 
+    String driverName = "com.mysql.jdbc.Driver";
+
+    String userName = "chenghao";
+
+    String userPasswd = "chenghao";
+
+    String dbName = "demo";
+
+    String tableName = "water";
+
+    String url = "jdbc:mysql://localhost:3306/" + dbName + "?user="
+            + userName + "&password=" + userPasswd;
+
+    Class.forName("com.mysql.jdbc.Driver").newInstance();
+    Connection connection = DriverManager.getConnection(url);
+    Statement statement = connection.createStatement();
+    String sql = "SELECT * FROM " + tableName;
+    ResultSet rs = statement.executeQuery(sql);
+%>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -42,7 +65,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav justify-content-end">
                 <li class="nav-item active">
-                    <a class="navbar-right" href="student_information.jsp">The user who is logging in is：${sessionScope.user.username}(admin)</a>
+                    <a class="navbar-right" href="admin_profile.jsp">The user who is logging in is：${sessionScope.user.username}(admin)</a>
                 </li>
                 <li class="nav-item active">
                     <a class="navbar-right" href="${pageContext.request.contextPath}/FYP1_war_exploded/LoginOutServlet" onclick="return logout()">log out</a>
@@ -94,90 +117,72 @@
             </div>
             <div style="float: right; margin: 5px;">
                 <a class="btn btn-primary" href="${pageContext.request.contextPath}/ExportExcelServlet">Export Excel</a>
-                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_deleteuser.jsp">add information</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_addwater.jsp">add information</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_deletewater.jsp">delete information</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath }/pages/admin/resources/jsp/admin_changewater.jsp">change information</a>
             </div>
 
-                <table class="table table-striped" >
+            <table border="1" class="table table-bordered table-hover">
                     <thead>
                     <tr>
                         <th>ID</th>
                         <th>username</th>
                         <th>telephone</th>
-                        <th>add time</th>
-                        <th>consumption(ton)</th>
-                        <th>amount price</th>
-                        <th>unit price</th>
+                        <th>add_time</th>
+                        <th>consumption</th>
+                        <th>amount_price</th>
+                        <th>unit_price</th>
                         <th>stage</th>
                     </tr>
+                    <%
+                        while (rs.next()) {
+                    %>
                     <tr>
-                        <th>1</th>
-                        <th>chenghao</th>
-                        <th>3530920232</th>
-                        <th>2022-2-6</th>
-                        <th>125</th>
-                        <th>2</th>
-                        <th>250</th>
-                        <th>paid</th>
-
-                    </tr>
-                    <tr>
-                        <th>2</th>
-                        <th>Isarwi</th>
-                        <th>180203292</th>
-                        <th>2022-2-10</th>
-                        <th>120</th>
-                        <th>2</th>
-                        <th>240</th>
-                        <th>paid</th>
-
-                    </tr>
-                    <tr>
-                        <th>3</th>
-                        <th>Jack</th>
-                        <th>3532027322</th>
-                        <th></th>
-                        <th>127</th>
-                        <th>2</th>
-                        <th>254</th>
-                        <th><a href="https://buy.stripe.com/test_00gcQ44tA5r0bhC8ww"> <span style="color:red">unpaid</span></a></th>
-
-                    </tr>
-                    <tr>
-                        <th>4</th>
-                        <th>Mike</th>
-                        <th>3532124643</th>
-                        <th>2022-2-2</th>
-                        <th>110</th>
-                        <th>2</th>
-                        <th>220</th>
-                        <th>paid</th>
-
+                        <th> <%
+                            out.print(rs.getString(1));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(2));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(3));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(4));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(5));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(6));
+                        %>  </th>
+                        <th> <%
+                            out.print(rs.getString(7));
+                        %>  </th>
+                        <th>
+                            <%
+                                String stageValue = rs.getString(8);
+                                int orderId = rs.getInt(1);
+                                if ("unpaid".equals(stageValue)) {
+                            %>
+                            <a href="https://buy.stripe.com/test_00gcQ44tA5r0bhC8ww" target="_blank" onclick="updateDatabaseStatus(<%=orderId%>)">
+                                <%= stageValue %>
+                            </a>
+                            <%
+                                } else {
+                                    out.print(stageValue);
+                                }
+                            %>
+                        </th>
                     </tr>
                     </thead>
-
+                <%
+                    }
+                %>
                 </table>
 
             </div>
-            <form class="form-horizontal" role="form" action="${pageContext.request.contextPath}/AdminSearchServlet" method="post">
-                <input type="hidden" name="per" value="service">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">username</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input username" name="studentid">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">telephone</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" placeholder="input telephone" name="studentname">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">query</button>
-                    </div>
-                </div>
-            </form>
+
         <div style="position: fixed; bottom: 0; right: 0;">
             <img src="../images/SETU_LOGO.png" alt="SETU Logo">
         </div>
@@ -190,6 +195,5 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-
 </body>
 </html>
